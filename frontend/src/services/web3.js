@@ -10,6 +10,8 @@ console.log("Contract Address: ", ContractAddress, "is valid address: ", ethers.
 var web3Provider;
 var signer;
 var provider;
+var contractSinger;
+var contractProvider;
 
 async function loadWeb3() {
     if (web3Provider && signer && provider) {
@@ -44,18 +46,49 @@ async function loadWeb3() {
 }
 
 async function getSingerContract() {
+    if (contractSinger) {
+        return contractSinger;
+    }
     const { abi } = contractABI;
     const { provider } = await loadWeb3();
     // load contract
-    const contract = new ethers.Contract(ContractAddress, abi, provider);
-    return contract;
+    contractSinger = new ethers.Contract(ContractAddress, abi, provider);
+    return contractSinger;
 }
 
 async function getProviderContract() {
+    if (contractProvider) {
+        return contractProvider;
+    }
     const { abi } = contractABI;
     const { signer } = await loadWeb3();
     // load contract
-    const contract = new ethers.Contract(ContractAddress, abi, signer);
-    return contract;
+    contractProvider = new ethers.Contract(ContractAddress, abi, signer);
+    return contractProvider;
 }
 
+export async function send(message) {
+    const contract = await getProviderContract();
+    const tx = await contract.send(message);
+    await tx.wait();
+}
+
+export async function get(page, pageSize) {
+    const contract = await getSingerContract();
+    const messages = await contract.get(page, pageSize);
+    return messages.map((message) => {
+        const [text, sender, timestamp] = message;
+        
+        return {
+            text,
+            sender,
+            timestamp: new Date(Number(timestamp) * 1000),
+        }
+    })
+}
+
+export async function count() {
+    const contract = await getSingerContract();
+    const count = await contract.count();
+    return count;
+}
