@@ -11,8 +11,8 @@ function App() {
     return (
         <>
             <HashRouter basename="/">
-                <MenuUI />
                 <main id="main" className='min-h-screen flex flex-col justify-between black'>
+                <MenuUI />
                     <Header />
                     <AppRouter />
                     <Footer />
