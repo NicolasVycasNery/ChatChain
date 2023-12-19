@@ -2,7 +2,6 @@
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { menuState } from '../../store/BurgerMenuContext';
-import PropTypes from 'prop-types';
 
 function BurgerIcon({
     width = "36px",
@@ -47,12 +46,6 @@ function BurgerIcon({
         </div>
     );
 }
-
-BurgerIcon.propTypes = {
-    width: PropTypes.string,
-    height: PropTypes.string,
-};
-
 
 function Header() {
     const [isOpen, setIsOpen] = useRecoilState(menuState);
